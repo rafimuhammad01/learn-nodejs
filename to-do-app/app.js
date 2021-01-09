@@ -2,9 +2,17 @@ const express = require("express");
 const app = express();
 const morgan = require('morgan');
 const bodyParser  = require('body-parser');
+const mongoose = require("mongoose");
 
 
 const todoRoutes = require("./api/routes/todo");
+
+mongoose.connect('mongodb+srv://rafi_muhammad01:' + process.env.MONGO_ATLAS_PW + '@cluster0.dumg5.mongodb.net/to-do-api?retryWrites=true&w=majority',
+{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false}));
