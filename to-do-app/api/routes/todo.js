@@ -5,10 +5,21 @@ const mongoose = require("mongoose")
 
 router.get("/", (req, res, next) => {
     ToDo.find()
+    .select("activity detail _id")
     .then(docs => {
+        const count = docs.length
         res.status(200).json({
-            message: "GET Request to /to-do",
-            data : docs
+            count : count,
+            todolist : docs.map(doc => {
+                return {
+                    activity : doc.activity,
+                    detail : doc.detail,
+                    request : {
+                        type : "GET",
+                        url : "http://localhost:3000/v1/to-do/" + doc._id
+                    }
+                }
+            })
         })
     })
     .catch(err => {
@@ -32,9 +43,17 @@ router.post("/", (req, res, next) => {
 
     todo.save()
     .then(result => {
-        res.status(200).json({
+        res.status(201).json({
             message: "Activity Created!",
-            data : result
+            data : {
+                _id : result._id,
+                activity : result.activity,
+                detail : result.detail,
+                request : {
+                    type : "GET",
+                    url : "http://localhost:3000/v1/to-do/" + result._id
+                }
+            }
         });
     })
     .catch(err => {
@@ -54,7 +73,16 @@ router.get('/:todoId', (req,res, next) => {
         if (result) {
             res.status(200).json({
                 message : "succsess",
-                data : result
+                data :  {
+                    _id : result._id,
+                    activity : result.activity,
+                    detail : result.detail,
+                    request : {
+                        type : "GET",
+                        description : "get all to-do-list",
+                        url : "http://localhost:3000/v1/to-do/"
+                    }
+                }
             })
         } else {
             res.status(404).json({
@@ -83,8 +111,11 @@ router.patch('/:todoId', (req,res, next) => {
     ToDo.updateOne({_id : id}, {$set: updateOps}).
     then(result => {
         res.status(200).json({
-            message : "Updated!",
-            data : result
+            message : "Data Updated!",
+            url : {
+                type : "GET",
+                url : "http://localhost:3000/v1/to-do/" + id
+            } 
         })
         
     })
@@ -101,11 +132,19 @@ router.patch('/:todoId', (req,res, next) => {
 
 router.delete('/:todoId', (req,res, next) => {
     ToDo.remove({_id : req.params.todoId})
+    .select("_id activity detail")
     .then(result => {
         if (result.deletedCount != 0) {
             res.status(200).json({
-                message : "deleted",
-                data : result
+                message : "Data Deleted!",
+                request : {
+                    type : "POST",
+                    url : "http://localhost:3000/v1/to-do/",
+                    body : {
+                        activity : "String (required)",
+                        detail : "String"
+                    }
+                }
             })
         } else {
             res.status(404).json({
