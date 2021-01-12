@@ -12,7 +12,7 @@ mongoose.connect('mongodb+srv://rafi_muhammad01:' + process.env.MONGO_ATLAS_PW +
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-
+    
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false}));
