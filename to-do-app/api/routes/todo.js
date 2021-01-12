@@ -18,7 +18,7 @@ router.get("/", (req, res, next) => {
                     detail : doc.detail,
                     request : {
                         type : "GET",
-                        url : "http://localhost:3000/v1/to-do/" + doc._id
+                        url : process.env.URL + "v1/to-do/" + doc._id
                     }
                 }
             })
@@ -53,7 +53,7 @@ router.post("/", (req, res, next) => {
                 detail : result.detail,
                 request : {
                     type : "GET",
-                    url : "http://localhost:3000/v1/to-do/" + result._id
+                    url : process.env.URL + "v1/to-do/" + result._id
                 }
             }
         });
@@ -82,7 +82,7 @@ router.get('/:todoId', (req,res, next) => {
                     request : {
                         type : "GET",
                         description : "get all to-do-list",
-                        url : "http://localhost:3000/v1/to-do/"
+                        url : process.env.URL + "v1/to-do/"
                     }
                 }
             })
@@ -116,7 +116,7 @@ router.patch('/:todoId', (req,res, next) => {
             message : "Data Updated!",
             url : {
                 type : "GET",
-                url : "http://localhost:3000/v1/to-do/" + id
+                url : process.env.URL + "v1/to-do/" + id
             } 
         })
         
@@ -141,7 +141,7 @@ router.delete('/:todoId', (req,res, next) => {
                 message : "Data Deleted!",
                 request : {
                     type : "POST",
-                    url : "http://localhost:3000/v1/to-do/",
+                    url : process.env.URL + "v1/to-do/",
                     body : {
                         activity : "String (required)",
                         detail : "String"
