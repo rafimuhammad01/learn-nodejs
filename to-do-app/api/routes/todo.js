@@ -3,6 +3,8 @@ const router = express.Router();
 const ToDo = require("../models/todo")
 const mongoose = require("mongoose")
 
+
+
 router.get("/", (req, res, next) => {
     ToDo.find()
     .select("activity detail _id")
