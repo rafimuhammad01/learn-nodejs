@@ -14,6 +14,7 @@ router.get("/", (req, res, next) => {
             count : count,
             todolist : docs.map(doc => {
                 return {
+                    _id : doc._id,
                     activity : doc.activity,
                     detail : doc.detail,
                     request : {
