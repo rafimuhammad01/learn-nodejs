@@ -28,6 +28,7 @@ $(function() {
 
     //POST REQUEST
     $(".form-section").submit(function(e){
+        e.preventDefault()
 
         const data = {
             "activity" : $("#activity").val(),
@@ -137,7 +138,7 @@ $(function() {
     //OTHER FUNCTIONALITY
     $(".add-activity").click(function() {
         $(".form-section").append(`
-        <form method="POST">
+        <form action="" method="POST">
             <div class="form-group">
                 <label for="activity">Activity</label>
                 <input type="text" class="form-control" id="activity" required>
