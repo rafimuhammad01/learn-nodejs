@@ -1,0 +1,42 @@
+.navbar {
+    background-color: #00303f;
+    margin-bottom: 5%;
+}
+.navbar .navbar-brand {
+    margin-left:5%
+}
+
+
+
+.content {
+    max-width: 50%;
+    margin: auto;
+}
+
+.fa {
+    cursor: pointer;
+}
+
+.btn {
+    background-color: #002530;
+    color: white;
+}
+
+.btn:active,.btn:hover {
+    background: #011e27;
+}
+
+.btn-outline-dark:not(:disabled):not(.disabled):active {
+    background: #010e13;
+}
+
+#loading-image{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+
+
+
