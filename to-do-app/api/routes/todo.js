@@ -107,9 +107,11 @@ router.patch('/:todoId', (req,res, next) => {
     const id = req.params.todoId;
     const updateOps = {};
 
-    for (const ops of req.body) {
-        updateOps[ops.propName] = ops.value
+    for (const key of Object.keys(req.body)) {
+        
+        updateOps[key] = req.body[key]
     }
+
 
     ToDo.updateOne({_id : id}, {$set: updateOps}).
     then(result => {
@@ -123,10 +125,11 @@ router.patch('/:todoId', (req,res, next) => {
         
     })
     .catch(err => {
+        console.log(err)
         res.status(500).json({
             message : "Error", 
             status : 500,
-            error : err
+            error : err,
         })
     })
 
