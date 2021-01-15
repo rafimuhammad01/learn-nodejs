@@ -41,6 +41,7 @@ $(function() {
             data: data,
             success : function(data) {
                 
+                location.reload()
             },
             dataType: "json"
         })
