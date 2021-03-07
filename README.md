@@ -7,7 +7,7 @@
   email: string
 }
 ```
-**POST v2/user/signup**
+**POST /v2/user/signup**
 ----
   Signup user to db
 * **URL Params**  
