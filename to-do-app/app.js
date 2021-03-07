@@ -5,7 +5,10 @@ const bodyParser  = require('body-parser');
 const mongoose = require("mongoose");
 
 
-const todoRoutes = require("./api/routes/todo");
+const todoRoutes = require("./api/routes/v1/todo");
+const userRoutes = require("./api/routes/v2/user");
+const todoRoutesV2 = require("./api/routes/v2/todo");
+const auth = require("./api/middleware/auth");
 
 mongoose.connect('mongodb+srv://rafi_muhammad01:' + process.env.MONGO_ATLAS_PW + '@cluster0.dumg5.mongodb.net/to-do-api?retryWrites=true&w=majority',
 {
@@ -27,8 +30,12 @@ app.use((req, res, next) => {
 })
 
 
+
+
 //Routes
-app.use("/v1/to-do", todoRoutes );
+app.use("/v1/to-do", todoRoutes);
+app.use("/v2/user", userRoutes);
+app.use("/v2/to-do", auth ,todoRoutesV2);
 
 
 app.use((req, res, next) => {

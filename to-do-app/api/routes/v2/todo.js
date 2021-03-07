@@ -1,12 +1,15 @@
 const express = require('express')
 const router = express.Router();
-const ToDo = require("../models/todo")
-const mongoose = require("mongoose")
+const ToDo = require("../../models/v2/todo")
+const mongoose = require("mongoose");
+const todo = require('../../models/v1/todo');
 
 
 
 router.get("/", (req, res, next) => {
-    ToDo.find()
+    ToDo.find({
+        username : req.userData.username
+    })
     .select("activity detail _id")
     .then(docs => {
         const count = docs.length
@@ -19,7 +22,7 @@ router.get("/", (req, res, next) => {
                     detail : doc.detail,
                     request : {
                         type : "GET",
-                        url : process.env.URL + "v1/to-do/" + doc._id
+                        url : process.env.URL + "v2/to-do/" + doc._id
                     }
                 }
             })
@@ -40,6 +43,7 @@ router.post("/", (req, res, next) => {
 
     const todo = new ToDo({
         _id : mongoose.Types.ObjectId(),
+        username : req.userData.username,
         activity : req.body.activity,
         detail : req.body.detail,
     })
@@ -54,7 +58,7 @@ router.post("/", (req, res, next) => {
                 detail : result.detail,
                 request : {
                     type : "GET",
-                    url : process.env.URL + "v1/to-do/" + result._id
+                    url : process.env.URL + "v2/to-do/" + result._id
                 }
             }
         });
@@ -83,7 +87,7 @@ router.get('/:todoId', (req,res, next) => {
                     request : {
                         type : "GET",
                         description : "get all to-do-list",
-                        url : process.env.URL + "v1/to-do/"
+                        url : process.env.URL + "v2/to-do/"
                     }
                 }
             })
@@ -103,6 +107,42 @@ router.get('/:todoId', (req,res, next) => {
     })
 })
 
+router.put("/:todoID", (req,res,next) => {
+    const id = req.params.todoID
+    todo.find({
+        _id : id,
+        username : req.userData.username
+    })
+    .then(result => {
+        if (result) {
+            if (req.body.activity != "") result.activity = req.body.activity;
+            if (req.body.detail != "") result.detail = req.body.detail;
+            todo.updateOne({_id:id, username:username}, result)
+            .then(result => {
+                return res.status(200).json({
+                    message: "Data Updated!",
+                    url : {
+                        type : "GET",
+                        url : process.env.URL + "v2/to-do/" + id
+                    }
+                })
+            })
+            .catch(err => {
+                return res.status(500).json({
+                    error : err
+                })
+            })
+        }
+    })
+    .catch(err => {
+        return res.status(500).json({
+            error : err
+        })
+    })
+
+    
+})
+/*
 router.patch('/:todoId', (req,res, next) => {
     const id = req.params.todoId;
     const updateOps = {};
@@ -135,9 +175,10 @@ router.patch('/:todoId', (req,res, next) => {
 
     
 })
+*/
 
 router.delete('/:todoId', (req,res, next) => {
-    ToDo.remove({_id : req.params.todoId})
+    ToDo.remove({_id : req.params.todoId, username:req.userData})
     .select("_id activity detail")
     .then(result => {
         if (result.deletedCount != 0) {
@@ -145,7 +186,7 @@ router.delete('/:todoId', (req,res, next) => {
                 message : "Data Deleted!",
                 request : {
                     type : "POST",
-                    url : process.env.URL + "v1/to-do/",
+                    url : process.env.URL + "v2/to-do/",
                     body : {
                         activity : "String (required)",
                         detail : "String"
